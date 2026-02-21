@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+    <div class="top-bar">
+        <h2>Calculadora</h2>
+        <button class="btn-historial" onclick="toggleHistorial()">Historial</button>
+    </div>
+
+    <!-- DISPLAY GRANDE -->
+    <div class="display-box">
+        <div class="display">
+            {{ valor_display if valor_display else "0" }}
+        </div>
+    </div>
+
+    <!-- FORMULARIO OCULTO -->
+    <form method="POST" id="calc-form">
+        <input type="hidden" name="num1" id="num1">
+        <input type="hidden" name="num2" id="num2">
+        <input type="hidden" name="operacion" id="operacion">
+    </form>
+
+    <!-- BOTONES -->
+    <div class="botones">
+        <button class="clear" onclick="limpiar()">C</button>
+        <button onclick="operar('/')">÷</button>
+        <button onclick="operar('*')">×</button>
+        <button onclick="borrar()">⌫</button>
+
+        <button onclick="agregar('7')">7</button>
+        <button onclick="agregar('8')">8</button>
+        <button onclick="agregar('9')">9</button>
+        <button class="op" onclick="operar('-')">−</button>
+
+        <button onclick="agregar('4')">4</button>
+        <button onclick="agregar('5')">5</button>
+        <button onclick="agregar('6')">6</button>
+        <button class="op" onclick="operar('+')">+</button>
+
+        <button onclick="agregar('1')">1</button>
+        <button onclick="agregar('2')">2</button>
+        <button onclick="agregar('3')">3</button>
+        <button class="igual" onclick="calcular()">=</button>
+
+        <button onclick="agregar('0')">0</button>
+        <button onclick="agregar('.')">.</button>
+        <button onclick="cientifica('sin')">sin</button>
+        <button onclick="cientifica('cos')">cos</button>
+
+        <button onclick="cientifica('log')">log</button>
+        <button onclick="cientifica('√')">√</button>
+        <button onclick="cientifica('^')">xʸ</button>
+        <button onclick="cientifica('exp')">exp</button>
+    </div>
+</div>
+
+<!-- HISTORIAL POPUP -->
+<div class="historial-popup" id="historialPopup">
+    <div class="historial-content">
+        <h3>Historial</h3>
+
+        {% for item in historial %}
+            <p>{{ item }}</p>
+        {% endfor %}
+
+        <form action="/borrar" method="post">
+            <button type="submit" class="btn-borrar">Borrar historial</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+let num1 = "";
+let num2 = "";
+let operacion = "";
+let segundo = false;
+
+function agregar(n) {
+    if (!segundo) {
+        num1 += n;
+    } else {
+        num2 += n;
+    }
+    actualizarPantalla();
+}
+
+function operar(op) {
+    if (num1 === "") return;
+    operacion = op;
+    segundo = true;
+    actualizarPantalla();
+}
+
+function actualizarPantalla() {
+    let texto = num1;
+    if (operacion) texto += " " + operacion;
+    if (num2) texto += " " + num2;
+    document.querySelector(".display").innerText = texto || "0";
+}
+
+function limpiar() {
+    num1 = "";
+    num2 = "";
+    operacion = "";
+    segundo = false;
+    actualizarPantalla();
+}
+
+function borrar() {
+    if (segundo) {
+        num2 = num2.slice(0, -1);
+    } else {
+        num1 = num1.slice(0, -1);
+    }
+    actualizarPantalla();
+}
+
+function calcular() {
+    document.getElementById("num1").value = num1;
+    document.getElementById("num2").value = num2;
+    document.getElementById("operacion").value = operacion;
+    document.getElementById("calc-form").submit();
+}
+
+function cientifica(op) {
+    document.getElementById("num1").value = num1 || 0;
+    document.getElementById("num2").value = 0;
+    document.getElementById("operacion").value = op;
+    document.getElementById("calc-form").submit();
+}
+
+function toggleHistorial() {
+    document.getElementById("historialPopup").classList.toggle("activo");
+}
+</script>
+
+</body>
+</html>
