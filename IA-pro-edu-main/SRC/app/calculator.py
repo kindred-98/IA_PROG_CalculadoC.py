@@ -15,7 +15,7 @@ def calcular(num1, num2, operacion):
         return num1 * num2
 
     elif operacion == "/":
-        return num1 / num2 if num2 != 0 else "Error: división por cero"
+        return num1 / num2 if num2 != 0 else "No se puede divir entre 0"
 
     elif operacion == "^":
         return num1 ** num2
