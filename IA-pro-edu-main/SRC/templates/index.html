@@ -68,9 +68,9 @@
     <div class="historial-content">
         <h3>Historial</h3>
 
-        {% for item in historial %}
-            <p>{{ item }}</p>
-        {% endfor %}
+        {% for op in historial %}
+    <li>{{ op.expresion }} = {{ op.resultado }}</li>
+{% endfor %}
 
         <form action="/borrar" method="post">
             <button type="submit" class="btn-borrar">Borrar historial</button>

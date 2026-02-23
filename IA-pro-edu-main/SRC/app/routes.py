@@ -1,11 +1,12 @@
 from flask import Blueprint, render_template, request, redirect, url_for
+
+# 🔹 NUEVO: importamos db y modelos
+from app import db
+from app.models import Operacion, Usuario
+
 from app.calculator import calcular
 
 main = Blueprint("main", __name__)
-
-# Historial en memoria (de momento)
-historial = []
-
 
 @main.route("/", methods=["GET", "POST"])
 def inicio():
@@ -29,20 +30,43 @@ def inicio():
             else:
                 valor_display = resultado
 
-            historial.append(f"{num1} {operacion} {num2} = {resultado}")
+            # 🔹 NUEVO: buscar o crear usuario
+            usuario = Usuario.query.first()
+
+            if not usuario:
+                usuario = Usuario(nombre="Angel")
+                db.session.add(usuario)
+                db.session.commit()
+
+            # 🔹 NUEVO: guardar operación en base de datos
+            nueva_operacion = Operacion(
+                expresion=f"{num1} {operacion} {num2}",
+                resultado=valor_display,
+                usuario_id=usuario.id
+            )
+
+            db.session.add(nueva_operacion)
+            db.session.commit()
 
         except Exception:
             valor_display = "Error"
+
+    # 🔹 NUEVO: obtener historial desde la base de datos
+    operaciones = Operacion.query.order_by(Operacion.id.desc()).all()
 
     return render_template(
         "index.html",
         resultado=resultado,
         valor_display=valor_display,
-        historial=historial
+        historial=operaciones  # 🔹 CAMBIADO
     )
 
 
 @main.route("/borrar", methods=["POST"])
 def borrar_historial():
-    historial.clear()
+
+    # 🔹 NUEVO: borrar todas las operaciones desde la BD
+    Operacion.query.delete()
+    db.session.commit()
+
     return redirect(url_for("main.inicio"))
