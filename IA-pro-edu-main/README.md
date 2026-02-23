@@ -67,3 +67,49 @@ if __name__ == "__main__":
 
 # Muestra el resultado
     print("El resultado es:", resultado)
+
+
+# AdCalSci - Advanced Calculator Scientific
+
+AdCalSci es una calculadora científica web desarrollada con Flask y
+SQLite. El proyecto evolucionó desde una aplicación simple con historial
+en memoria hasta una arquitectura backend modular con persistencia real
+en base de datos.
+
+## Tecnologías utilizadas
+
+-   Python
+-   Flask
+-   Flask-SQLAlchemy
+-   SQLite
+-   HTML5
+-   CSS3
+
+## Arquitectura del proyecto
+
+app/ │ ├── **init**.py → Inicialización de Flask y base de datos ├──
+models.py → Modelos Usuario y Operacion ├── routes.py → Rutas
+principales y lógica de guardado ├── calculator.py → Lógica matemática
+separada │ templates/ │ └── index.html │ static/ │ └── style.css
+
+## Funcionalidades actuales
+
+-   Operaciones matemáticas básicas y científicas
+-   Formateo de resultados (máximo 10 decimales)
+-   Historial persistente en SQLite
+-   Borrado completo del historial
+-   Arquitectura modular profesional
+
+## Conceptos backend aplicados
+
+-   Separación de responsabilidades
+-   Uso de Blueprint
+-   Modelos relacionales con ForeignKey
+-   db.session.add()
+-   db.session.commit()
+-   Persistencia de datos
+
+## Estado actual
+
+Aplicación funcional, estructurada profesionalmente y lista para escalar
+con autenticación, API y despliegue en producción.
