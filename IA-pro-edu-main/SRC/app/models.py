@@ -5,10 +5,17 @@ class Usuario(db.Model):
     __tablename__ = "usuarios"
 
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(100), nullable=False)
-    
-    operaciones = db.relationship("Operacion", backref="usuario", lazy=True)
 
+    username = db.Column(db.String(80), unique=True, nullable=False)
+
+    email = db.Column(db.String(120), unique=True, nullable=False)
+
+    password_hash = db.Column(db.String(255), nullable=False)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    operaciones = db.relationship("Operacion", backref="usuario", lazy=True)
+    
 class Operacion(db.Model):
     __tablename__ = "operaciones"
 

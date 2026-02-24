@@ -1,18 +1,20 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, session
 
-# 🔹 NUEVO: importamos db y modelos
 from app import db
 from app.models import Operacion, Usuario
-
 from app.calculator import calcular
 
 main = Blueprint("main", __name__)
+
 
 @main.route("/", methods=["GET", "POST"])
 def inicio():
 
     resultado = None
     valor_display = ""
+
+    # 🔹 Obtener usuario desde sesión (si existe)
+    usuario_id = session.get("user_id")
 
     if request.method == "POST":
         num1 = request.form.get("num1", "")
@@ -30,43 +32,42 @@ def inicio():
             else:
                 valor_display = resultado
 
-            # 🔹 NUEVO: buscar o crear usuario
-            usuario = Usuario.query.first()
+            # 🔥 SOLO guardar si hay usuario logueado
+            if usuario_id:
+                nueva_operacion = Operacion(
+                    expresion=f"{num1} {operacion} {num2}",
+                    resultado=valor_display,
+                    usuario_id=usuario_id
+                )
 
-            if not usuario:
-                usuario = Usuario(nombre="Angel")
-                db.session.add(usuario)
+                db.session.add(nueva_operacion)
                 db.session.commit()
-
-            # 🔹 NUEVO: guardar operación en base de datos
-            nueva_operacion = Operacion(
-                expresion=f"{num1} {operacion} {num2}",
-                resultado=valor_display,
-                usuario_id=usuario.id
-            )
-
-            db.session.add(nueva_operacion)
-            db.session.commit()
 
         except Exception:
             valor_display = "Error"
 
-    # 🔹 NUEVO: obtener historial desde la base de datos
-    operaciones = Operacion.query.order_by(Operacion.id.desc()).all()
+    # 🔹 Mostrar historial solo si hay usuario logueado
+    if usuario_id:
+        operaciones = Operacion.query.filter_by(usuario_id=usuario_id)\
+                                     .order_by(Operacion.id.desc()).all()
+    else:
+        operaciones = []
 
     return render_template(
         "index.html",
         resultado=resultado,
         valor_display=valor_display,
-        historial=operaciones  # 🔹 CAMBIADO
+        historial=operaciones
     )
 
 
 @main.route("/borrar", methods=["POST"])
 def borrar_historial():
 
-    # 🔹 NUEVO: borrar todas las operaciones desde la BD
-    Operacion.query.delete()
-    db.session.commit()
+    usuario_id = session.get("user_id")
+
+    if usuario_id:
+        Operacion.query.filter_by(usuario_id=usuario_id).delete()
+        db.session.commit()
 
     return redirect(url_for("main.inicio"))
