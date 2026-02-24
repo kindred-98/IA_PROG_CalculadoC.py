@@ -1,90 +1,198 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Calculadora</title>
+    <title>AdCalSci</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
-<div class="app">
+<!-- =======================================================
+     🔝 NAVBAR SUPERIOR (Nombre app + Auth usuario)
+======================================================= -->
+<div class="navbar">
 
-    <!-- HEADER -->
-    <div class="top-bar">
-        <h2>Calculadora</h2>
-        <button class="btn-historial" onclick="toggleHistorial()">Historial</button>
+    <!-- Nombre de la aplicación -->
+    <div class="navbar-left">
+        <strong>AdCalSci</strong>
     </div>
 
-    <!-- DISPLAY GRANDE -->
+    <!-- Estado de sesión -->
+    <div class="navbar-right">
+        {% if usuario %}
+            <!-- Si está logueado -->
+            Bienvenido, <strong>{{ usuario.username }}</strong> |
+            <a href="{{ url_for('main.logout') }}">Logout</a>
+        {% else %}
+            <!-- Si NO está logueado -->
+            <a href="#" onclick="abrirLogin()">Login</a>
+            <a href="#" onclick="abrirRegister()">Register</a>
+        {% endif %}
+    </div>
+
+</div>
+
+
+<!-- =======================================================
+     🧮 CONTENEDOR PRINCIPAL CALCULADORA
+======================================================= -->
+<div class="app">
+
+    <!-- Barra superior interna -->
+    <div class="top-bar">
+        <h2>AdCalSci</h2>
+
+        <!-- Botón que abre el historial lateral -->
+        <button class="btn-historial" onclick="abrirHistorial()">
+            Historial ▼
+        </button>
+    </div>
+
+
+    <!-- =======================================================
+         🖥 DISPLAY (Pantalla resultado)
+    ======================================================= -->
     <div class="display-box">
         <div class="display">
             {{ valor_display if valor_display else "0" }}
         </div>
     </div>
 
-    <!-- FORMULARIO OCULTO -->
+
+    <!-- =======================================================
+         📤 FORM OCULTO (Envía datos al backend)
+    ======================================================= -->
     <form method="POST" id="calc-form">
         <input type="hidden" name="num1" id="num1">
         <input type="hidden" name="num2" id="num2">
         <input type="hidden" name="operacion" id="operacion">
     </form>
 
-    <!-- BOTONES -->
+
+    <!-- =======================================================
+         🔢 BOTONERA CALCULADORA
+    ======================================================= -->
     <div class="botones">
+
+        <!-- Fila 1 -->
         <button class="clear" onclick="limpiar()">C</button>
         <button onclick="operar('/')">÷</button>
         <button onclick="operar('*')">×</button>
         <button onclick="borrar()">⌫</button>
 
+        <!-- Fila 2 -->
         <button onclick="agregar('7')">7</button>
         <button onclick="agregar('8')">8</button>
         <button onclick="agregar('9')">9</button>
         <button class="op" onclick="operar('-')">−</button>
 
+        <!-- Fila 3 -->
         <button onclick="agregar('4')">4</button>
         <button onclick="agregar('5')">5</button>
         <button onclick="agregar('6')">6</button>
         <button class="op" onclick="operar('+')">+</button>
 
+        <!-- Fila 4 -->
         <button onclick="agregar('1')">1</button>
         <button onclick="agregar('2')">2</button>
         <button onclick="agregar('3')">3</button>
         <button class="igual" onclick="calcular()">=</button>
 
+        <!-- Fila 5 -->
         <button onclick="agregar('0')">0</button>
         <button onclick="agregar('.')">.</button>
         <button onclick="cientifica('sin')">sin</button>
         <button onclick="cientifica('cos')">cos</button>
 
+        <!-- Fila 6 -->
         <button onclick="cientifica('log')">log</button>
         <button onclick="cientifica('√')">√</button>
         <button onclick="cientifica('^')">xʸ</button>
         <button onclick="cientifica('exp')">exp</button>
+
     </div>
+
 </div>
 
-<!-- HISTORIAL POPUP -->
-<div class="historial-popup" id="historialPopup">
-    <div class="historial-content">
+
+<!-- =======================================================
+     📜 HISTORIAL LATERAL (SIDEBAR DESLIZANTE)
+======================================================= -->
+<div id="historialSidebar" class="historial-sidebar">
+
+    <!-- Cabecera del historial -->
+    <div class="historial-header">
         <h3>Historial</h3>
+        <!-- Botón cerrar -->
+        <button onclick="cerrarHistorial()">✕</button>
+    </div>
 
+    <!-- Lista de operaciones -->
+    <ul>
         {% for op in historial %}
-    <li>{{ op.expresion }} = {{ op.resultado }}</li>
-{% endfor %}
+            <li>{{ op.expresion }} = {{ op.resultado }}</li>
+        {% else %}
+            <li>No hay operaciones aún</li>
+        {% endfor %}
+    </ul>
 
-        <form action="/borrar" method="post">
-            <button type="submit" class="btn-borrar">Borrar historial</button>
+    <!-- Botón borrar historial -->
+    <form method="POST" action="{{ url_for('main.borrar_historial') }}">
+        <button type="submit" class="btn-borrar">Borrar historial</button>
+    </form>
+
+</div>
+
+
+<!-- =======================================================
+     🔐 MODALES LOGIN / REGISTER
+======================================================= -->
+
+<!-- LOGIN -->
+<div id="loginModal" class="modal oculto">
+    <div class="modal-content">
+        <h3>Iniciar sesión</h3>
+        <form method="POST" action="{{ url_for('main.login') }}">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit">Entrar</button>
         </form>
+        <button onclick="cerrarModal()">Cerrar</button>
+    </div>
+</div>
+
+<!-- REGISTER -->
+<div id="registerModal" class="modal oculto">
+    <div class="modal-content">
+        <h3>Crear cuenta</h3>
+        <form method="POST" action="{{ url_for('main.register') }}">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit">Registrarse</button>
+        </form>
+        <button onclick="cerrarModal()">Cerrar</button>
     </div>
 </div>
 
 
+<!-- =======================================================
+     🧠 JAVASCRIPT
+======================================================= -->
 <script>
+
+/* =====================================================
+   🧮 LÓGICA DE LA CALCULADORA
+===================================================== */
+
 let num1 = "";
 let num2 = "";
 let operacion = "";
 let segundo = false;
 
+/* Añade números */
 function agregar(n) {
     if (!segundo) {
         num1 += n;
@@ -94,6 +202,7 @@ function agregar(n) {
     actualizarPantalla();
 }
 
+/* Selecciona operador */
 function operar(op) {
     if (num1 === "") return;
     operacion = op;
@@ -101,6 +210,7 @@ function operar(op) {
     actualizarPantalla();
 }
 
+/* Actualiza display */
 function actualizarPantalla() {
     let texto = num1;
     if (operacion) texto += " " + operacion;
@@ -108,6 +218,7 @@ function actualizarPantalla() {
     document.querySelector(".display").innerText = texto || "0";
 }
 
+/* Limpia todo */
 function limpiar() {
     num1 = "";
     num2 = "";
@@ -116,6 +227,7 @@ function limpiar() {
     actualizarPantalla();
 }
 
+/* Borra último dígito */
 function borrar() {
     if (segundo) {
         num2 = num2.slice(0, -1);
@@ -125,6 +237,7 @@ function borrar() {
     actualizarPantalla();
 }
 
+/* Envía operación al backend */
 function calcular() {
     document.getElementById("num1").value = num1;
     document.getElementById("num2").value = num2;
@@ -132,6 +245,7 @@ function calcular() {
     document.getElementById("calc-form").submit();
 }
 
+/* Operaciones científicas */
 function cientifica(op) {
     document.getElementById("num1").value = num1 || 0;
     document.getElementById("num2").value = 0;
@@ -139,9 +253,53 @@ function cientifica(op) {
     document.getElementById("calc-form").submit();
 }
 
-function toggleHistorial() {
-    document.getElementById("historialPopup").classList.toggle("activo");
+
+/* =====================================================
+   📜 SIDEBAR HISTORIAL
+===================================================== */
+
+/* Abrir historial */
+function abrirHistorial() {
+    document.getElementById("historialSidebar").classList.add("activo");
 }
+
+/* Cerrar historial */
+function cerrarHistorial() {
+    document.getElementById("historialSidebar").classList.remove("activo");
+}
+
+/* Cerrar si se hace click fuera */
+document.addEventListener("click", function(event) {
+    const sidebar = document.getElementById("historialSidebar");
+    const boton = document.querySelector(".btn-historial");
+
+    if (
+        sidebar.classList.contains("activo") &&
+        !sidebar.contains(event.target) &&
+        !boton.contains(event.target)
+    ) {
+        cerrarHistorial();
+    }
+});
+
+
+/* =====================================================
+   🔐 MODALES LOGIN / REGISTER
+===================================================== */
+
+function abrirLogin() {
+    document.getElementById("loginModal").classList.remove("oculto");
+}
+
+function abrirRegister() {
+    document.getElementById("registerModal").classList.remove("oculto");
+}
+
+function cerrarModal() {
+    document.getElementById("loginModal").classList.add("oculto");
+    document.getElementById("registerModal").classList.add("oculto");
+}
+
 </script>
 
 </body>

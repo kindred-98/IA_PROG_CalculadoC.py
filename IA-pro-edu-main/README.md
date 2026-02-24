@@ -113,3 +113,20 @@ separada │ templates/ │ └── index.html │ static/ │ └── style
 
 Aplicación funcional, estructurada profesionalmente y lista para escalar
 con autenticación, API y despliegue en producción.
+
+RESUMEN DE LO QUE CAMBIÓ
+24/02/26
+| Cambio | Qué hace                     |
+| ------ | ---------------------------- |
+| 1      | Import hash                  |
+| 3      | Verificar duplicados         |
+| 4      | Hashear contraseña           |
+| 5      | Guardar sesión en register   |
+| 6      | Buscar usuario login         |
+| 7      | Validar contraseña           |
+| 9      | Proteger inicio              |
+| 10     | Obtener usuario logueado     |
+| 11     | Asociar operación al usuario |
+| 12     | Mostrar solo su historial    |
+| 13     | Logout                       |
+| 14     | Borrar solo su historial     |
