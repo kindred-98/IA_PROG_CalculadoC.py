@@ -98,6 +98,17 @@ separada │ templates/ │ └── index.html │ static/ │ └── style
 -   Formateo de resultados (máximo 10 decimales)
 -   Historial persistente en SQLite
 -   Borrado completo del historial
+
+## Integración Continua (CI/CD)
+
+Este proyecto utiliza GitHub Actions para ejecutar pruebas automatizadas en cada push y pull request a la rama main.
+
+### Pipeline de CI
+
+- **Instalación de dependencias**: Instala Flask y Flask-SQLAlchemy desde `requirements.txt`.
+- **Ejecución de tests**: Ejecuta los tests unitarios ubicados en `IA-pro-edu-main/test/` con unittest.
+
+Los tests se ejecutan automáticamente y cualquier fallo detendrá el merge hasta que se corrija.
 -   Arquitectura modular profesional
 
 ## Conceptos backend aplicados
