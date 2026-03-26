@@ -1,3 +1,5 @@
+<div align="center">
+
 # 🧮 AdCalSci — Advanced Calculator Scientific
 
 **Calculadora científica web desarrollada con Flask y SQLite**  
@@ -13,6 +15,7 @@
 [![CSS3](https://img.shields.io/badge/CSS3-Estilos-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/es/docs/Web/CSS)
 [![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)](https://github.com/kindred-98/IA_PROG_CalculadoC.py)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
+</div>
 
 ---
 
@@ -82,22 +85,22 @@ Este proyecto nació como una calculadora básica de consola en Python puro y ev
 ┌─────────────────────────────────────────────────────────────────┐
 │                          AdCalSci                               │
 │                                                                 │
-│  ┌──────────────────┐        ┌─────────────────────────────┐   │
-│  │   templates/     │        │          app/               │   │
-│  │                  │◄──────►│                             │   │
-│  │  index.html      │        │  routes.py   → lógica web   │   │
-│  │                  │        │  models.py   → ORM/BD       │   │
-│  └──────────────────┘        │  calculator.py → matemática │   │
-│                              │  __init__.py → init Flask   │   │
-│  ┌──────────────────┐        └─────────────────────────────┘   │
-│  │   static/        │                     │                    │
-│  │                  │                     ▼                    │
-│  │  style.css       │        ┌─────────────────────────────┐   │
-│  │                  │        │         SQLite              │   │
-│  └──────────────────┘        │                             │   │
-│                              │  Usuario  ──┐               │   │
-│                              │  Operacion ◄┘ (ForeignKey)  │   │
-│                              └─────────────────────────────┘   │
+│  ┌──────────────────┐        ┌─────────────────────────────┐    │
+│  │   templates/     │        │          app/               │    │
+│  │                  │◄──────►│                             │    │
+│  │  index.html      │        │  routes.py   → lógica web   │    │
+│  │                  │        │  models.py   → ORM/BD       │    │
+│  └──────────────────┘        │  calculator.py → matemática │    │
+│                              │  __init__.py → init Flask   │    │
+│  ┌──────────────────┐        └─────────────────────────────┘    │
+│  │   static/        │                     │                     │
+│  │                  │                     ▼                     │
+│  │  style.css       │        ┌─────────────────────────────┐    │
+│  │                  │        │         SQLite              │    │
+│  └──────────────────┘        │                             │    │
+│                              │  Usuario  ──┐               │    │
+│                              │  Operacion ◄┘ (ForeignKey)  │    │
+│                              └─────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -248,7 +251,7 @@ IA-pro-edu-main/
 - ✅ Función `calcular()` documentada con docstring
 
 ---
-
+<div align="center">
 ## 👨‍💻 Autor
 
 **A.D.E.V.**
@@ -269,3 +272,4 @@ Este proyecto está distribuido bajo la licencia **MIT**.
 *Hecho con 🧮 Python, Flask y arquitectura progresiva*
 
 ⭐ Si este proyecto te resulta útil, considera dejarle una estrella en GitHub
+</div>
